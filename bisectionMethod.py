@@ -11,25 +11,29 @@ def get_zeroes_with_bisection(f, a, b, tolerance=1e-6, max_iterations=1000):
         return False
     else:
         iteration = 0
+        # Relevant for plotting the results
         mid_points = []
+        mid_points_y_values = []
 
         while iteration < max_iterations:
             # Compute the new mid point
             mid_point = (a + b) / 2
-            mid_points.append(mid_point)
 
             # Save values, so they do not have to be calculated over and over again
             fa, fb, fmid = f(a), f(b), f(mid_point)
 
+            mid_points.append(mid_point)
+            mid_points_y_values.append(fmid)
+
             print(f"Iteration {iteration}:")
-            print(f"a = {a}, f(a) = {f(a)}")
-            print(f"b = {b}, f(b) = {f(b)}")
+            print(f"a = {a}, f(a) = {fa}")
+            print(f"b = {b}, f(b) = {fb}")
             print(f"mid_point = {mid_point}, f(mid_point) = {fmid}")
 
             # We found the Zero, if fmid is closer to zero than our tolerance
             if abs(fmid) < tolerance:
                 print(f"Found Zero at {mid_point} after {iteration + 1} iterations")
-                plot_bisection(mid_points, f)
+                plot_bisection(mid_points, mid_points_y_values)
                 return True
 
             # fmid is not within the tolerance area. Check, if the zero is within the left our within the right interval
@@ -43,19 +47,18 @@ def get_zeroes_with_bisection(f, a, b, tolerance=1e-6, max_iterations=1000):
             iteration += 1
 
         print(f"No zero found after {max_iterations} iterations")
-        plot_bisection(mid_points, f)
+        plot_bisection(mid_points, mid_points_y_values)
         return False
 
 
-def plot_bisection(mid_points, f):
+def plot_bisection(mid_points, f_mid_points):
     iterations = range(len(mid_points))
-    f_values = [f(mid) for mid in mid_points]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 
     # Plot for f(mid_point) over iterations to show to which y values
     # the function is heading (-> 0, if it converges)
-    ax1.plot(iterations, f_values, 'bo-', label='y = f(mid_point)')
+    ax1.plot(iterations, f_mid_points, 'bo-', label='y = f(mid_point)')
     ax1.axhline(0, color='red', linestyle='--', linewidth=1)
     ax1.set_xlabel('Iteration')
     ax1.set_ylabel('y')

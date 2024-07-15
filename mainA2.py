@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 import bisectionMethod
 import fixpointIterationMethod
-# import lu_decomposition
 import newtonIterationMethod
 
 

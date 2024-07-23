@@ -17,6 +17,12 @@ def f1(x):
 def f1_derivative(x):
     return 2*x
 
+def f3(x):
+    return (1/4)*x**3 - x + 1/5
+
+def f3_derivative(x):
+    return (3/4)*x**2 - 1
+
 def compare_methods(f, f_derivative=None, a=None, b=None, x0=None, x_true=None, tolerance=1e-6, max_iterations=1000):
     
     fixpoint_instance = FixpointIteration(f, x0, tolerance, max_iterations)
@@ -63,6 +69,6 @@ def compare_methods(f, f_derivative=None, a=None, b=None, x0=None, x_true=None, 
     plt.show()
 
 
-compare_methods(f, f_derivative, a=0, b=1, x0=1, x_true=1.328268856)
+compare_methods(f3, f3_derivative, a=0, b=1, x0=0.9, x_true=0.202062517)
 
-compare_methods(f1, f1_derivative, a=0, b=2, x0=2, x_true=1.328268856)
+# compare_methods(f1, f1_derivative, a=0, b=2, x0=2, x_true=None)

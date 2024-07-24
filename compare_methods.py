@@ -75,10 +75,10 @@ def compare_methods(f, f_derivative=None, a=0, b=3, x0=None, x_true=None, tolera
     return results
 
 functions = [
-(f, f_derivate, 0, 3, 1, 0.7390851086421),
-(f1, f1_derivate, 0, 3, 1, math.sqrt(2)), 
-(f3, f3_derivate, 0, 1, 0.5, 0.20206236349401457),
-# (f4, f4_derivate, 1, 0)   
+# (f, f_derivate, 0, 3, 1, 0.7390851086421),
+# (f1, f1_derivate, 0, 3, 1, math.sqrt(2)), 
+# (f3, f3_derivate, 0, 1, 0.5, 0.20206236349401457),
+ (f4, f4_derivate, 0, 3, 2, 0.0)   
 ]
 
 results = []

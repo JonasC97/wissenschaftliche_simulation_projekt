@@ -9,21 +9,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from newtonIterationMethod import NewtonIteration
 
 def f1(x):
-    return x**2 - 2
+    return x**2 - 4
 
 def f1_derivative(x):
     return 2*x
 
-def f3(x):
-    return math.exp(x) - 2
-
-def f3_derivative(x):
-    return math.exp(x)
-
-def f4(x):
-    return x**3 - 6*x**2 + 11*x - 6  
-
-def f4_derivative(x):
     return 3*x**2 - 12*x + 11
 
 def f5(x):
@@ -76,9 +66,8 @@ def test_newton_method(f, f_derivative, x0, show_animation, x_true=None, toleran
 
 # Beispielhafte Tests mit verschiedenen Funktionen und Startwerten
 functions = [
-    (f1, f1_derivative, 1, math.sqrt(2), True),    # Function that works well 
-    (f3, f3_derivative, 0, math.log(2), True),     # Function that works well
-    (f5, f5_derivative, 0.5, math.e, True),        # log Function that works as well
+    (f1, f1_derivative, 1, 2, True),    # Function that works well 
+    # (f5, f5_derivative, 0.5, math.e, True),        # log Function that works as well
     (f7, f7_derivate, 1, 0, True),
     (f8, f8_derivate, 2, 0, False),                   # Case where the function diverge for x!=0
     (f9, f9_derivate, 2, 1, True),                   # Converges to x=-1 instead of x=1

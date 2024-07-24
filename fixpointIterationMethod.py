@@ -11,6 +11,7 @@ class FixpointIteration:
         self.max_iterations = max_iterations
         self.x_values = []
         self.errors = []
+        self.iterations = 0
 
     # f is a function whose zero we want to determine. Since this is potentially very complex or perhaps even impossible
     # to determine directly, we convert this problem of calculating the zero into a fixed point calculation, which we can approach iteratively
@@ -61,6 +62,7 @@ class FixpointIteration:
                 self.errors.append(error)
                 # print(f"Result: {x_next} (Error: {error})")
                 # print("-------")
+                self.iterations = self.iterations+1
                 if error < self.tolerance:
                     print(f"Found zero at {x_next}")
                     # Plot the results

@@ -20,6 +20,7 @@ def newton_method(F, J, x0, x_true, tolerance=1e-6, max_iterations=1000):
         # print(Fx)
         # print(Jx)
         # Compute the x delta with our LU-Decomposition Algorithm
+        # F(x_k+1) ≈ F(x_k) + J(x_k) * delta_x_k  (= 0) <=> -F(x_k) = J(x_k) * delta_x_k
         delta_x, message = solve_linear_system_with_lu_decomposition(Jx, -Fx)
 
         print(delta_x)
@@ -62,8 +63,8 @@ def plot_convergence(errors):
     plt.show()
 
 def plot_eoc_values(eoc_values):
-    # print("EOC-Values")
-    # print(eoc_values)
+    print("EOC-Values")
+    print(eoc_values)
     # Plot for the EOC Values
     plt.figure()
     plt.plot(range(1, len(eoc_values) + 1), eoc_values, marker='o')

@@ -4,17 +4,17 @@ from matplotlib.ticker import MaxNLocator
 import numpy as np
 
 class FixpointIteration:
-    def __init__(self, f, x0, tolerance=1e-6, max_iterations=1000):
+    def __init__(self, f, x0, plot_title="f(x)", tolerance=1e-6, max_iterations=1000):
         self.f = f
         self.x0 = x0
         self.tolerance = tolerance
         self.max_iterations = max_iterations
         self.x_values = []
         self.errors = []
+        self.plot_title = plot_title
 
     # f is a function whose zero we want to determine. Since this is potentially very complex or perhaps even impossible
     # to determine directly, we convert this problem of calculating the zero into a fixed point calculation, which we can approach iteratively
-    # iteratively.
 
     # So instead of f(x) = 0, we want to have a function of the form g(x) = x.
     # We now define g(x) := f(x) + x <=> x = f(x) + x <=> f(x) = 0
@@ -28,6 +28,8 @@ class FixpointIteration:
         derivative_g = lambda x: (self.g(x + h) - self.g(x)) / h
         x = self.x0
         for _ in range(100):
+            print(x)
+            print(abs(derivative_g(x)))
             if abs(derivative_g(x)) >= 1:
                 return False
             x = self.g(x)
@@ -43,9 +45,9 @@ class FixpointIteration:
         print("---- Computing Zero with fixpoint iteration method ----")
         x = self.x0
         if not self.is_contraction():
-            print("The function is not a contraction.")
-            return False
-        
+            print("WARNING: Detected Non-Contracting Parts within the relevant area. The fixpoint iteration may not converge!")
+            # return False
+
         # Keep track of values for the plotting
         self.x_values = [self.x0]
         self.errors = []
@@ -59,6 +61,7 @@ class FixpointIteration:
                 # If this deviation is smaller than the tolerance range, g has a fixpoint and therefore f has a zero point
                 error = abs(x_next - x)
                 self.errors.append(error)
+                self.x_values.append(x_next)
                 # print(f"Result: {x_next} (Error: {error})")
                 # print("-------")
                 if error < self.tolerance:
@@ -67,9 +70,8 @@ class FixpointIteration:
                     return True
                 if np.isnan(x_next) or np.isinf(x_next):
                     print("Numerical instability detected. Stopping iteration.")
-                    break
+                    return False
                 x = x_next
-                self.x_values.append(x)
             # The method is very susceptible to error explosions, especially if f, g and x0 are chosen inappropriately
             # With steeply increasing functions, this can very quickly cause the values to fly out of the validity ranges
             # This should be intercepted.
@@ -91,24 +93,28 @@ class FixpointIteration:
     def plot_fixpoint_iteration(self):
         iterations = range(len(self.x_values))
 
+        print(iterations)
+        print(self.x_values)
+        print(self.errors)
+
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 
         # Plot for x values over iterations
         # Plot for mid_points to show to which x values the function is heading (-> Zero Point, if it converges)
-        ax1.plot(iterations, self.x_values, 'bo-', label='x values')
+        ax1.plot(range(len(self.x_values)), self.x_values, 'bo-', label='x values')
         ax1.set_xlabel('Iteration')
         ax1.set_ylabel('x')
-        ax1.set_title('Convergence of Fixpoint Iteration (x-values)')
+        ax1.set_title(f'Convergence of Fixpoint Iteration (x-values) for {self.plot_title}')
         ax1.legend()
         ax1.grid(True)
         ax1.xaxis.set_major_locator(MaxNLocator(integer=True))
 
         # Plot for errors over iterations to show to which final error
         # the function is heading (-> 0, if it converges)
-        ax2.plot(iterations, self.errors, 'go-', label='errors')
+        ax2.plot(range(len(self.errors)), self.errors, 'go-', label='errors')
         ax2.set_xlabel('Iteration')
         ax2.set_ylabel('Error')
-        ax2.set_title('Convergence of Fixpoint Iteration (errors)')
+        ax2.set_title(f'Convergence of Fixpoint Iteration (errors) for {self.plot_title}')
         ax2.legend()
         ax2.grid(True)
         ax2.xaxis.set_major_locator(MaxNLocator(integer=True))

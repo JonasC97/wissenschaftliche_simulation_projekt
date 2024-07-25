@@ -20,6 +20,7 @@ class NewtonIteration:
         self.show_animation = show_animation
         self.x_values = [x0]
         self.f_values = [f(x0)]
+        self.errors = [abs(x0 - x_true) if x_true is not None else None]
         self.eoc_values = []
         self.iterations = 0
         self.zero_found = False
@@ -41,6 +42,7 @@ class NewtonIteration:
             x = x - self.f(x) / self.f_derivative(x)
             self.x_values.append(x)
             self.f_values.append(self.f(x))
+            self.errors.append(abs(x - self.x_true) if self.x_true is not None else None)
 
             print(f"Current x: {x}")
             if self.x_true is not None:
@@ -126,7 +128,7 @@ class NewtonIteration:
             ax.grid(True)
 
         # Animate the plot
-        ani = animation.FuncAnimation(fig, update, frames=len(self.x_values) * 2, interval=2000, repeat=True)
+        ani = animation.FuncAnimation(fig, update, frames=len(self.x_values) * 2, interval=500, repeat=True)
         plt.tight_layout()
         plt.show(block=False)  # Blockierender Plot
 
@@ -135,10 +137,12 @@ class NewtonIteration:
         if self.x_true is None:
             return eoc_values
         for i in range(len(self.x_values) - 2):
-            # Now calculate with x_values[i], x_values[i+1], x_values[i+2] and x_true a numerical estimation of the order of convergence
-            eoc_k = np.log(np.linalg.norm(self.x_values[i + 1] - self.x_true) / np.linalg.norm(self.x_values[i + 2] - self.x_true)) / np.log(np.linalg.norm(self.x_values[i] - self.x_true) / np.linalg.norm(self.x_values[i + 1] - self.x_true))
+            numerator = np.log(np.abs(self.x_values[i + 1] - self.x_true) / np.abs(self.x_values[i + 2] - self.x_true))
+            denominator = np.log(np.abs(self.x_values[i] - self.x_true) / np.abs(self.x_values[i + 1] - self.x_true))
+            eoc_k = numerator / denominator
             eoc_values.append(eoc_k)
         return eoc_values
+
 
     def plot_eoc_values(self):
         # Plot for the EOC Values
@@ -150,11 +154,16 @@ class NewtonIteration:
         plt.title('Newton EOC Plot')
         plt.show(block=False)
 
-# Beispiel-Funktion und Ableitung
-def f(x):
-    return x**3 - 2*x + 2
-
-def f_derivative(x):
-    return 3*x**2 - 2
-
+    def plot_errors(self):
+        if not self.errors or self.x_true is None:
+            return
+        plt.figure()
+        plt.plot(range(len(self.errors)), self.errors, 'ro-', label='Error |x_k - x_true|')
+        plt.xlabel('Iteration')
+        plt.ylabel('Error')
+        plt.title('Newton Errors Plot')
+        plt.legend()
+        plt.grid(True)
+        plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.show(block=False)
 

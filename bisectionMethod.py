@@ -15,6 +15,7 @@ class BisectionMethod:
         self.max_iterations = max_iterations
         self.mid_points = []  # Liste zur Speicherung der berechneten Mittelpunkte
         self.mid_points_y_values = []  # Liste zur Speicherung der Funktionswerte an den Mittelpunkten
+        self.iterations = 0
 
     def get_zeroes_with_bisection(self):
         # Methode zur Berechnung der Nullstelle mittels der Bisektionsmethode.
@@ -37,7 +38,7 @@ class BisectionMethod:
                 # Speichert die Mittelpunkte und deren Funktionswerte.
                 self.mid_points.append(mid_point)
                 self.mid_points_y_values.append(fmid)
-
+                self.iterations = self.iterations +1
                 print(f"Iteration {iteration}:")
                 print(f"a = {self.a}, f(a) = {fa}")
                 print(f"b = {self.b}, f(b) = {fb}")

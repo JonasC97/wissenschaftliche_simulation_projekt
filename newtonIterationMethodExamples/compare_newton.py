@@ -6,6 +6,8 @@ from matplotlib.ticker import MaxNLocator
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from newtonIterationMethod import NewtonIteration
 
+# Nur spielerei/Test für verschiedenen Startpunkte
+
 def f(x):
     return (1/4)*x**3 - x + 1/5
 

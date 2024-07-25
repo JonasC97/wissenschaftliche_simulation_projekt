@@ -16,18 +16,6 @@ def f1_derivative(x):
 
     return 3*x**2 - 12*x + 11
 
-def f5(x):
-    return math.log(x) - 1  
-
-def f5_derivative(x):
-    return 1/x
-
-def f6(x):
-    return (1/4)*x**3 - x + 1/5
-
-def f6_derivative(x):
-    return (3/4)*x**2 - 1
-
 def f7(x):
     return x**3
 
@@ -67,11 +55,10 @@ def test_newton_method(f, f_derivative, x0, show_animation, x_true=None, toleran
 # Beispielhafte Tests mit verschiedenen Funktionen und Startwerten
 functions = [
     (f1, f1_derivative, 1, 2, True),    # Function that works well 
-    # (f5, f5_derivative, 0.5, math.e, True),        # log Function that works as well
-    (f7, f7_derivate, 1, 0, True),
-    (f8, f8_derivate, 2, 0, False),                   # Case where the function diverge for x!=0
-    (f9, f9_derivate, 2, 1, True),                   # Converges to x=-1 instead of x=1
-    (f10, f10_derivate, 2, 3, True)                  # Bad starting point results in horizontal tangent
+    (f7, f7_derivate, 1, 0, True),      # Function that converges slower, due to low gradient at x=0          
+    (f8, f8_derivate, 2, 0, False),     # Case where the function diverge for x!=0
+    (f9, f9_derivate, 2, 1, True),      # Converges to x=-1 instead of x=1
+    (f10, f10_derivate, 2, 3, True)     # Bad starting point results in horizontal tangent
 ]
 
 for f, f_derivative, x0, x_true, show_animation in functions:

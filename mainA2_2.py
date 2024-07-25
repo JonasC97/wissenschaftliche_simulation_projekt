@@ -3,10 +3,6 @@ import matplotlib.pyplot as plt
 
 
 from bisectionMethod import BisectionMethod
-from fixpointIterationMethod import FixpointIteration
-from newtonIterationMethod import NewtonIteration
-
-
 
 def f1(x):
     return x**3 + 2*x - 5

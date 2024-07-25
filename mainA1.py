@@ -1,33 +1,13 @@
 import numpy as np
 from lu_decomposition import lu_decomposition, solve_linear_system_with_lu_decomposition
 
-A = np.array([[1,6,1],[2,3,2],[4,2,1]], dtype=float)
-print("-- Teste LR-Zerlegung für: --")
-print(A)
-L,U,P = lu_decomposition(A)
-
-print("L:")
-print(L)
-
-print("U:")
-print(U)
-
-print("P:")
-print(P)
-
-print("Test: L*U = ")
-print(np.matmul(L,U))
-
-print("Cross-check: P*A = ")
-print(np.matmul(P,A))
-print("\n")
-
-
-#######################################
-
-
-A = np.array([[2, -2, 4], [1, 3, 6], [-1, 2, 1]], dtype=float)
-b = np.array([10, 25, 6], dtype=float)
+# Gleichungs-System: 2x - y + 3z = 2, -6x - 3y - 7z = -2, 4x + 4y + 5z = -5, 8x + 2y + 12z = 2
+A = np.array([
+    [2, -1, 1],
+    [-3, -1, 2],
+    [-2, 1, 2]
+], dtype=float)
+b = np.array([8, -11, -3], dtype=float)
 print(f"--- Solve Linear System ---")
 print("with A = ")
 print(A)

@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+import pandas as pd
 from bisectionMethod import BisectionMethod
 from fixpointIterationMethod import FixpointIteration
 from newtonIterationMethod import NewtonIteration
@@ -8,67 +9,90 @@ from newtonIterationMethod import NewtonIteration
 def f(x):
     return math.cos(x) - x
 
-def f_derivative(x):
+def f_derivate(x):
     return -math.sin(x) - 1
 
 def f1(x):
     return x**2 - 2
 
-def f1_derivative(x):
+def f1_derivate(x):
     return 2*x
 
 def f3(x):
     return (1/4)*x**3 - x + 1/5
 
-def f3_derivative(x):
+def f3_derivate(x):
     return (3/4)*x**2 - 1
 
-def compare_methods(f, f_derivative=None, a=None, b=None, x0=None, x_true=None, tolerance=1e-6, max_iterations=1000):
-    
+def f4(x):
+    return x**(1/3)
+
+def f4_derivate(x):
+    return 1 / (3 * x**(2/3))
+
+def compare_methods(f, f_derivative=None, a=0, b=3, x0=None, x_true=None, tolerance=1e-6, max_iterations=1000):
+    results = []
+
     fixpoint_instance = FixpointIteration(f, x0, tolerance, max_iterations)
     fixpoint_instance.get_zeroes_with_fixpoint_iteration()
+    fixpoint_instance.plot_fixpoint_iteration()
+    fixpoint_result = {
+        'Method': 'Fixpoint Iteration',
+        'Iterations': fixpoint_instance.iterations,
+        'x': fixpoint_instance.x_values[-1] if fixpoint_instance.x_values else None,
+        'EOC': None,
+        'Error': None
+    }
+    results.append(fixpoint_result)
 
-    
     bisection_instance = BisectionMethod(f, a, b, tolerance, max_iterations)
     bisection_instance.get_zeroes_with_bisection()
+    bisection_instance.plot_bisection()
+    bisection_result = {
+        'Method': 'Bisection',
+        'Iterations': bisection_instance.iterations,
+        'x': bisection_instance.mid_points[-1] if bisection_instance.mid_points else None,
+        'EOC': None,
+        'Error': None
+    }
+    results.append(bisection_result)
 
-    
     newton_instance = NewtonIteration(f, f_derivative, x0, x_true, tolerance, max_iterations, show_animation=False)
     newton_instance.get_zeroes_with_newton_iteration()
+    newton_instance.plot_standard_plots()
+    newton_instance.plot_errors()
+    newton_instance.plot_eoc_values()
+    newton_result = {
+        'Method': 'Newton',
+        'Iterations': newton_instance.iterations,
+        'x': newton_instance.x_values[-1] if newton_instance.x_values else None,
+        'EOC': newton_instance.eoc_values[-1] if newton_instance.eoc_values else None,
+        'Error': newton_instance.errors[-1] if newton_instance.errors else None
+    }
+    results.append(newton_result)
 
-    
-    fig, axs = plt.subplots(2, 1, figsize=(12, 12))
-
-   
-    iterations_fixpoint = range(len(fixpoint_instance.x_values))
-    iterations_bisection = range(len(bisection_instance.mid_points))
-    iterations_newton = range(len(newton_instance.x_values))
-
-    axs[0].plot(iterations_fixpoint, fixpoint_instance.x_values, 'bo-', label='Fixpoint Iteration')
-    axs[0].plot(iterations_bisection, bisection_instance.mid_points, 'go-', label='Bisection Method')
-    axs[0].plot(iterations_newton, newton_instance.x_values, 'ro-', label='Newton Method')
-    axs[0].set_xlabel('Iteration')
-    axs[0].set_ylabel('x')
-    axs[0].set_title('Comparison of x-values')
-    axs[0].legend()
-    axs[0].grid(True)
-    axs[0].xaxis.set_major_locator(MaxNLocator(integer=True))
-
-    # Plotting errors
-    axs[1].plot(iterations_fixpoint, fixpoint_instance.errors, 'bo-', label='Fixpoint Iteration')
-    axs[1].plot(iterations_bisection, bisection_instance.mid_points_y_values, 'go-', label='Bisection Method')
-    axs[1].plot(iterations_newton, newton_instance.f_values, 'ro-', label='Newton Method')
-    axs[1].set_xlabel('Iteration')
-    axs[1].set_ylabel('Error')
-    axs[1].set_title('Comparison of Errors')
-    axs[1].legend()
-    axs[1].grid(True)
-    axs[1].xaxis.set_major_locator(MaxNLocator(integer=True))
-
-    plt.tight_layout()
     plt.show()
+    return results
+
+functions = [
+(f, f_derivate, 0, 3, 1, 0.7390851086421),
+(f1, f1_derivate, 0, 3, 1, math.sqrt(2)), 
+(f3, f3_derivate, 0, 1, 0.5, 0.20206236349401457),
+ (f4, f4_derivate, 0, 3, 2, 0.0)   
+]
+
+results = []
+
+for f, f_derivative, a, b, x0, x_true, in functions:
+    try:
+        result = compare_methods(f, f_derivative, a=a, b=b, x0=x0, x_true=x_true)
+        results.extend(result)
+    except Exception as e:
+        print(f"Fehler bei der Funktion {f.__name__} mit Startwert {x0}: {e}")
+
+df = pd.DataFrame(results)
+df.to_csv('results.csv', index=False)
+
+print(df)
 
 
-compare_methods(f3, f3_derivative, a=0, b=1, x0=0.9, x_true=0.202062517)
-
-# compare_methods(f1, f1_derivative, a=0, b=2, x0=2, x_true=None)

@@ -10,6 +10,7 @@ class BisectionMethod:
         self.max_iterations = max_iterations
         self.mid_points = []
         self.mid_points_y_values = []
+        self.iterations = 0
 
     def get_zeroes_with_bisection(self):
         print("---- Computing Zero with bisection method ----")
@@ -31,7 +32,7 @@ class BisectionMethod:
 
                 self.mid_points.append(mid_point)
                 self.mid_points_y_values.append(fmid)
-
+                self.iterations = self.iterations +1
                 print(f"Iteration {iteration}:")
                 print(f"a = {self.a}, f(a) = {fa}")
                 print(f"b = {self.b}, f(b) = {fb}")
